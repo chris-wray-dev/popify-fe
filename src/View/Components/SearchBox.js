@@ -1,41 +1,81 @@
 import React from 'react';
+import { connect } from 'react-redux';
+import { toggleSearchType, updateSearchQuery, searchSpotify } from '../../redux/actions';
+import './SearchBox.css';
 
-const selectType = (type) => {
-  const button = document.getElementById(type);
-  if (button.style.boxShadow === "") {
-    button.style.boxShadow = "0px 0px 0px 4px white inset";
-  } else {
-    button.style.boxShadow = ""
+
+const SearchBox = ({ toggleSearchType, updateSearchQuery, searchSpotify, searchData: { query } }) => {
+
+  const selectType = (type) => {
+    const button = document.getElementById(type);
+    if (button.style.boxShadow === "") {
+      button.style.boxShadow = "0px 0px 0px 4px white inset";
+    } else {
+      button.style.boxShadow = ""
+    }
+    toggleSearchType(type);
   }
-}
 
-const SearchBox = () => {
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    if (query.type.length === 0) {
+      const typeButtons = document.getElementsByClassName("type");
+      for (let i = 0; i < typeButtons.length; i++) {
+        typeButtons[i].classList.add('heartbeat');
+      }
+      setTimeout(() => {
+        for (let i = 0; i < typeButtons.length; i++) {
+          typeButtons[i].classList.remove('heartbeat');
+        }
+      }, 1500);
+    }
+    if (query.q === "") {
+      document.getElementById("search").classList.add('heartbeat');
+      setTimeout(() => {
+        document.getElementById("search").classList.remove('heartbeat');
+      }, 1500);
+    }
+    if (query.type.length > 0 && query.q !== "") {
+      searchSpotify(query);
+    }
+
+  }
+
+  const handleChange = (e) => {
+    updateSearchQuery(e.target.value);
+  }
+
   return (
     <div className="container">
       <div className="row">
-        <div className="col-4" id="album" style={ { ...styles.button, ...styles.album } } onClick={() => selectType("album")}>
+        <div className="col-4 type" id="album" style={ { ...styles.button, ...styles.album } } onClick={() => selectType("album")}>
           <p style={ styles.center }>ALBUM</p>
         </div>
-        <div className="col-4" id="artist" style={ { ...styles.button, ...styles.artist } } onClick={() => selectType("artist")}>
+        <div className="col-4 type" id="artist" style={ { ...styles.button, ...styles.artist } } onClick={() => selectType("artist")}>
           <p style={ styles.center }>ARTIST</p>
         </div>
-        <div className="col-4" id="playlist" style={ { ...styles.button, ...styles.playlist } } onClick={() => selectType("playlist")}>
+        <div className="col-4 type" id="playlist" style={ { ...styles.button, ...styles.playlist } } onClick={() => selectType("playlist")}>
           <p style={ styles.center }>PLAYLIST</p>
         </div>
       </div>
       <div className="row">
-        <div className="col-12" style={ styles.search }>
-          <input className="form-control form-control-lg" type="text" placeholder="search..." style={ { ...styles.input, ...styles.center} } />
+        <div className="col-12 search-bar" style={ styles.search }>
+          <form style={styles.center} onSubmit={handleSubmit}>
+            <div className="input-group" style={ styles.inputGroup }>
+              <input className="form-control form-control-lg" id="search" onChange={handleChange} placeholder="search..." style={styles.input} />
+              <button type="submit" className="btn btn-primary btn-lg">Go</button>
+            </div>
+          </form>
         </div>
       </div>
       <div className="row">
-        <div className="col-4" id="track" style={ { ...styles.button, ...styles.track } } onClick={() => selectType("track")}>
+        <div className="col-4 type" id="track" style={ { ...styles.button, ...styles.track } } onClick={() => selectType("track")}>
           <p style={ styles.center }>TRACK</p>
         </div>
-        <div className="col-4" id="show" style={ { ...styles.button, ...styles.show } } onClick={() => selectType("show")}>
+        <div className="col-4 type" id="show" style={ { ...styles.button, ...styles.show } } onClick={() => selectType("show")}>
           <p style={ styles.center }>SHOW</p>
         </div>
-        <div className="col-4" id="episode" style={ { ...styles.button, ...styles.episode } } onClick={() => selectType("episode")}>
+        <div className="col-4 type" id="episode" style={ { ...styles.button, ...styles.episode } } onClick={() => selectType("episode")}>
           <p style={ styles.center }>EPISODE</p>
         </div>
       </div>
@@ -75,10 +115,12 @@ const styles = {
     backgroundColor: "#777777",
     position: "relative"
   },
-  input: {
-    textAlign: "center",
-    maxWidth: "95%",
+  inputGroup: {
     width: 700,
+    maxWidth: "95vw"
+  },
+  input: {
+    textAlign: "center"
   },
   center: {
     position: "absolute",
@@ -88,4 +130,14 @@ const styles = {
   }
 }
 
-export default SearchBox;
+const mapStateToProps = ({ searchData }) => ({
+  searchData
+})
+
+const mapActionsToProps = ({
+  toggleSearchType,
+  updateSearchQuery,
+  searchSpotify
+})
+
+export default connect(mapStateToProps, mapActionsToProps)(SearchBox);

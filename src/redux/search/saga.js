@@ -2,6 +2,7 @@
 import { all, call, fork, put, takeEvery } from 'redux-saga/effects';
 
 import axios from "axios";
+import { checkResponseData } from '../utils';
 
 import {
   SEARCH_SPOTIFY
@@ -14,17 +15,15 @@ import {
 
 const request = axios.create({ baseURL: "http://localhost:9090/api" });
 
-const searchSpotifyAsync = async (query) =>
-  await request.get('/search', {
+const searchSpotifyAsync = async (query) => {
+  return await request.get('/search', {
       params: query
     })
-    .then(results => {
-        return results
-    })
-    .catch(error => error);
+    .then(checkResponseData);
+}
 
 function* searchSpotify({ payload }) {
-  const query = payload;
+  const query = { ...payload };
   query.type = query.type.join(',');
   try {
     const results = yield call(searchSpotifyAsync, query);
@@ -34,7 +33,7 @@ function* searchSpotify({ payload }) {
       yield put(searchSpotifyError(results.message));
     }
   } catch (error) {
-    yield put(searchSpotifyError(error.mesage));
+    yield put(searchSpotifyError(error));
   }
 }
 
