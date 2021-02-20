@@ -3,7 +3,6 @@ export const SEARCH_SPOTIFY = "SEARCH_SPOTIFY";
 export const SEARCH_SPOTIFY_SUCCESS = "SEARCH_SPOTIFY_SUCCESS";
 export const SEARCH_SPOTIFY_ERROR = "SEARCH_SPOTIFY_ERROR";
 
-export const TOGGLE_SEARCH_TYPE = "TOGGLE_SEARCH_TYPE";
 export const UPDATE_SEARCH_QUERY = "UPDATE_SEARCH_QUERY";
 
 export * from "./search/actions";

@@ -1,0 +1,18 @@
+.nav-link.active.albums {
+  background-color: #B529A3;
+}
+.nav-link.active.artists {
+  background-color: #FFBC04;
+}
+.nav-link.active.playlists {
+  background-color: #FA5023;
+}
+.nav-link.active.tracks {
+  background-color: #B8C403;
+}
+.nav-link.active.shows {
+  background-color: #FF126A;
+}
+.nav-link.active.episodes {
+  background-color: #FB8C21;
+}

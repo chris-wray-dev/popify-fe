@@ -24,6 +24,7 @@ const searchSpotifyAsync = async (query) => {
 
 function* searchSpotify({ payload }) {
   const query = { ...payload };
+  // takes the type array and converts it to comma separated string required by the api
   query.type = query.type.join(',');
   try {
     const results = yield call(searchSpotifyAsync, query);

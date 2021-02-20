@@ -2,7 +2,6 @@ import {
   SEARCH_SPOTIFY,
   SEARCH_SPOTIFY_SUCCESS,
   SEARCH_SPOTIFY_ERROR,
-  TOGGLE_SEARCH_TYPE,
   UPDATE_SEARCH_QUERY
 } from '../actions';
 
@@ -10,12 +9,14 @@ const INIT_STATE = {
   loading: false,
   query: {
     q: "",
-    type: []
+    type: [],
+    offset: 0
   },
-  results: []
+  results: null
 };
 
 const searchSpotify = (state = INIT_STATE, action) => {
+  
   switch (action.type) {
 
     case SEARCH_SPOTIFY:
@@ -28,20 +29,11 @@ const searchSpotify = (state = INIT_STATE, action) => {
     case SEARCH_SPOTIFY_ERROR:
       return { ...state, loading: false, error: action.payload.message };
 
-    case TOGGLE_SEARCH_TYPE:
-      const newTypeArray = [...state.query.type];
-      const type = action.payload;
-      if (newTypeArray.indexOf(type) === -1) {
-        newTypeArray.push(type);
-      } else {
-        newTypeArray.splice(newTypeArray.indexOf(type));
-      }
-      return  { ...state, query: { q: state.query.q, type: newTypeArray }};
+    case UPDATE_SEARCH_QUERY: {
+      const query = action.payload;
+      return  { ...state, query };
+    }
 
-    case UPDATE_SEARCH_QUERY:
-      const queryString = action.payload;
-      return  { ...state, query: { q: queryString, type: state.query.type }};
-      
     default: return { ...state };
   }
 }
