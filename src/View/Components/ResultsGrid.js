@@ -3,7 +3,7 @@ import { connect } from 'react-redux';
 import ResultCard from './ResultCard';
 import Pagination from './Pagination';
 import { updateSearchQuery, searchSpotify } from '../../redux/actions';
-import './ResultGrid.css';
+import './ResultsGrid.css';
 
 const ResultsGrid = ({ searchData: { results, query }, updateSearchQuery, searchSpotify }) => {
   const types = Object.keys(results);
